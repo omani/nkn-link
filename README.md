@@ -72,9 +72,9 @@ This example will:
 - show how to use peer A as a default route for peer B to route all of its traffic
 
 ### Initialize configuration
-Initialize a config.yaml by running nkn-link with the `-init` flag.
+If `nkn-link` cannot find a `config.yaml` file it will start in interactive mode to initialize one:
 ```
-peerA $ sudo $GOPATH/bin/nkn-link -init
+peerA $ sudo $GOPATH/bin/nkn-link
  _ _  _ __ _ _       _    _       _   
 | \ || / /| \ | ___ | |  <_>._ _ | |__
 |   ||  \ |   ||___|| |_ | || ' || / /
@@ -88,7 +88,7 @@ NKN peer address: nkn-link.ab8d73d580e5fcdfaad25ca442dd33066a22b9a7d28809acc5fb3
 NKN address of remote peer: 
 ```
 ```
-peerB $ sudo $GOPATH/bin/nkn-link -init
+peerB $ sudo $GOPATH/bin/nkn-link
  _ _  _ __ _ _       _    _       _   
 | \ || / /| \ | ___ | |  <_>._ _ | |__
 |   ||  \ |   ||___|| |_ | || ' || / /
