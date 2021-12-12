@@ -48,7 +48,7 @@ Tested only on GNU/Linux. More builds and tests will follow.
 - Quickly spin up a tunnel to reach another peer over SSH
 - Connect with a friend over NKN to exchange files
 - Upload files to a remote storage
-- Provide a friend in an oppressed country an "exit node" to reach the web
+- Make a friend in an oppressed country reach the web by providing an "exit node"
 - Connect multiple NKN peers together to form a private network
 - Do whatever one can do with IP connectivity
 
