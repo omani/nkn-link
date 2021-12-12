@@ -24,10 +24,13 @@ A Point-to-Point (Layer 3) tunnel between NKN Peers.
 
 
 ## Description
-NKN-Link provides a layer 3, point-to-point tunnel between two peers on the NKN network. This enables both peers to talk over IP and provides the ability to do whatever one can do with IP connectivity. NKN-Link can be seen as a simple 
-alternative to OpenVPN or Wireguard. The code is very simple and began as a fun pet project. I use NKN-Link as my VPN solution at home and for my laptop, by using a VPS as my remote NKN peer.
+NKN-Link provides a layer 3, point-to-point tunnel between two peers on the NKN network. This enables both peers to 
+talk over IP and provides the ability to do whatever one can do with IP connectivity. NKN-Link can be seen as a simple 
+alternative to OpenVPN or Wireguard. The code is very simple and began as a fun pet project. I use NKN-Link as my VPN 
+solution at home and for my laptop, by using a VPS as my remote NKN peer.
 
-The code makes use of the NKN MultiClient, but without sessions (no transmission and congestion control). That means, that this tunnel is similar to a UDP connection.
+The code makes use of the NKN MultiClient, but without sessions (no transmission and congestion control).
+That means, that this tunnel is similar to a UDP connection.
 
 A TUN device is created and each peer can talk via IP packets over the internet on an encrypted communication
 channel provided by the NKN network, `nkn-link` does not come with its own encryption logic. The encryption is 
