@@ -5,13 +5,14 @@ NKN-Link
 
 <p align="center"><img src="images/logo.png" alt="NKN-Link"/></p>
 
-A Point-to-Point (Layer 3) tunnel between NKN Peers.
+An **anonymous**, encrypted Point-to-Point (Layer 3) tunnel between two peers.
 
 # NKN-Link
 
 [![GoDoc](https://godoc.org/github.com/omani/nkn-link?status.svg)](https://godoc.org/github.com/omani/nkn-link)
 
 ## Table of Contents
+- [Preface](#Preface)
 - [Description](#Description)
 - [Install](#Install)
 - [Setup](#Setup)
@@ -23,22 +24,50 @@ A Point-to-Point (Layer 3) tunnel between NKN Peers.
 - [License](#License)
 
 
+## Preface
+NKN-Link does not aim to replace well tested and already established VPN solutions like 
+[OpenVPN](https://en.wikipedia.org/wiki/OpenVPN) or [Wireguard](https://en.wikipedia.org/wiki/WireGuard).
+
+However, NKN-Link comes with a neat feature that many VPN solutions do not provide. **Anonymity**.
+
+In a traditional VPN setup (VPN from home PC to VPS in datacenter), the outbound traffic of the home network can be
+hidden from the ISP, but the ISP does know that there is a connection from the ISP to the VPS. Any traffic after that
+is masqueraded by using the public IP of the VPS. This means that - as tech-savvy people already know - a VPN does not
+provide anonymity, only privacy. There is a big difference between the two. Let's enter NKN.
+
+
+[NKN](https://nkn.org/) (New Kind of Network) is an infrastructure for a decentralized Internet.
+
+>NKN is a new kind of peer to peer network connectivity protocol and ecosystem powered by a novel public blockchain.
+>It uses economic incentives to motivate Internet users to share network connections and utilize unused bandwidth.
+>NKN works without the direct use of an IP address. Data is only in the local device, and always guarantees best
+>protection of privacy and security.
+
+In other words, NKN uses a public DHT overlay on top of internet nodes. Nodes communicate with each other by making use
+of their public keys.
+
+**NKN-Link** addds an IP layer on top of two NKN peers.
+
+
 ## Description
-NKN-Link provides a layer 3, point-to-point tunnel between two peers on the NKN network. This enables both peers to 
-talk over IP and provides the ability to do whatever one can do with IP connectivity. NKN-Link can be seen as a simple 
-alternative to OpenVPN or Wireguard. The code is very simple and began as a fun pet project. I use NKN-Link as my VPN 
-solution at home and for my laptop, by using a VPS as my remote NKN peer.
+NKN-Link provides an anonymous and encrypted layer 3, point-to-point tunnel between two peers on the NKN network.
+
+This enables both peers to talk over IP over NKN.
+
+NKN-Link can be seen as a simple alternative to OpenVPN or Wireguard. The code is very simple and began as a fun pet
+project. I use NKN-Link as my VPN solution at home and for my laptop, by using a VPS as my remote NKN peer.
 
 The code makes use of the NKN MultiClient, but without sessions (no transmission and congestion control).
+
 That means, that this tunnel is similar to a UDP connection.
 
 A TUN device is created and each peer can talk via IP packets over the internet on an encrypted communication
-channel provided by the NKN network, `nkn-link` does not come with its own encryption logic. The encryption is 
+channel provided by the NKN network, `nkn-link` does not come with its own encryption logic. The encryption is
 completely handled by NKN itself.
 
-The code was written in one go and comes in a single file. No OOP-style logic.
+The code was written in one go and comes in a single file. No OOP-style logic and only works on Linux.
 
-This tool requires root privileges (`sudo`) to be able to create the TUN device.
+*This tool requires root privileges (`sudo`) to be able to create the TUN device.*
 
 Tested only on GNU/Linux. More builds and tests will follow.
 
@@ -56,7 +85,7 @@ Tested only on GNU/Linux. More builds and tests will follow.
 
 ## Install
 ```
-go install github.com/omani/nkn-link
+go install github.com/omani/nkn-link@latest
 ```
 
 ### Build from source
