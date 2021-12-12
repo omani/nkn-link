@@ -55,7 +55,13 @@ Tested only on GNU/Linux. More builds and tests will follow.
 ---
 ## Install
 ```
-go install github.com/omani/nkn-link@latest
+go install github.com/omani/nkn-link
+```
+
+### Build from source
+```
+go get github.com/omani/nkn-link
+make build
 ```
 
 ## Setup
