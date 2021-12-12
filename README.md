@@ -36,7 +36,7 @@ A TUN device is created and each peer can talk via IP packets over the internet 
 channel provided by the NKN network, `nkn-link` does not come with its own encryption logic. The encryption is 
 completely handled by NKN itself.
 
-The code was written in one go and comes in a single file with 303 loc. No OOP-style logic.
+The code was written in one go and comes in a single file. No OOP-style logic.
 
 This tool requires root privileges (`sudo`) to be able to create the TUN device.
 
