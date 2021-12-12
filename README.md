@@ -217,7 +217,6 @@ $ curl -o bigfile https://speed.hetzner.de/100MB.bin
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100  100M  100  100M    0     0  9.3M      0  0:00:08  0:00:08 --:--:-- 9.3M
-$ 
 ```
 Average download speed: 9.3MB/s. 8 seconds.
 
