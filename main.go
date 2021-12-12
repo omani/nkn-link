@@ -23,8 +23,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	sysctl "github.com/lorenzosaino/go-sysctl"
-
+	"github.com/lorenzosaino/go-sysctl"
 	"github.com/nknorg/nkn-sdk-go"
 	"github.com/songgao/packets/ethernet"
 	"github.com/songgao/water"
@@ -48,7 +47,6 @@ func main() {
 
 	configpath := flag.String("config", ".", "Path to config file. Default is $CWD.")
 	debug := flag.Bool("debug", false, "Enable debug output.")
-	init := flag.Bool("init", false, "Initialize config.yaml.")
 	flag.Parse()
 
 	viper.SetConfigName("config")
@@ -58,12 +56,13 @@ func main() {
 	// init config.yaml with preconfigured settings:
 	// - save seed of newly created NKN account
 	// - print address of the NKN client
-	if *init {
+	err := viper.ReadInConfig()
+	if err != nil {
 		fmt.Println(` _ _  _ __ _ _       _    _       _   
 | \ || / /| \ | ___ | |  <_>._ _ | |__
 |   ||  \ |   ||___|| |_ | || ' || / /
 |_\_||_\_\|_\_|     |___||_||_|_||_\_\`)
-		fmt.Printf("\n\nWelcome to NKN-Link. A Point-to-Point (Layer 3) tunnel between NKN Peers.\n\n\n")
+		fmt.Printf("\n\nWelcome to NKN-Link. A Point-to-Point (Layer 3) tunnel between NKN Peers.\n\n")
 		account, err := nkn.NewAccount(nil)
 		if err != nil {
 			log.Fatal(err)
@@ -73,16 +72,22 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("NKN peer address: %s\n\n", client.Address())
 
+		fmt.Printf("NKN peer address: %s\n\n", client.Address())
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("NKN address of remote peer: ")
 		remote_peer_addr, _ := reader.ReadString('\n')
-		viper.Set("nkn_remote_peer", strings.TrimSuffix(remote_peer_addr, "\n"))
+		remote_peer_addr = strings.TrimSuffix(remote_peer_addr, "\n")
+		viper.Set("nkn_remote_peer", remote_peer_addr)
 
-		fmt.Print("Choose IP address for TUN device in CIDR format (eg. 10.0.0.1/24): ")
+		fmt.Print("IP address for TUN device in CIDR format (eg. 10.0.0.1/24): ")
 		tun_device_ip_address, _ := reader.ReadString('\n')
-		viper.Set("tun_device_ip_address", strings.TrimSuffix(tun_device_ip_address, "\n"))
+		tun_device_ip_address = strings.TrimSuffix(tun_device_ip_address, "\n")
+		if len(tun_device_ip_address) == 0 {
+			tun_device_ip_address = "10.0.0.1/24"
+		}
+
+		viper.Set("tun_device_ip_address", tun_device_ip_address)
 		viper.Set("nkn_seedrpcserver_address", SEEDRPCSERVERADDR)
 		viper.Set("nkn_account_seed", hex.EncodeToString(account.Seed()))
 		viper.Set("tun_device_name", IDENTIFIER)
@@ -95,16 +100,10 @@ func main() {
 			log.Fatalf("Could not write to config.yaml: %v", err)
 		}
 
-		fmt.Println("To enable IP forwarding on this peer, set `enable_ip_forwarding` to `true`.")
 		fmt.Println("Successfully written to config.yaml.")
-		fmt.Println("All set. Run `sudo ./nkn-vpn` to start.")
+		fmt.Println("All set. Run `sudo ./nkn-link` to start.")
 		client.Close()
 		return
-	}
-
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Fatalf("%v.\nRun 'sudo ./nkn-vpn -init' to initialize a config file.\n", err)
 	}
 
 	// user preferred seed rpc server address
@@ -117,7 +116,12 @@ func main() {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("NKN address of remote peer: ")
 		remote_peer_addr, _ := reader.ReadString('\n')
-		viper.Set("nkn_remote_peer", strings.TrimSuffix(remote_peer_addr, "\n"))
+		remote_peer_addr = strings.TrimSuffix(remote_peer_addr, "\n")
+		if len(remote_peer_addr) == 0 {
+			log.Println("No remote peer address provided. Aborting.")
+			return
+		}
+		viper.Set("nkn_remote_peer", remote_peer_addr)
 	}
 
 	seed, err := hex.DecodeString(viper.GetString("nkn_account_seed"))
