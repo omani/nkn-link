@@ -1,12 +1,3 @@
-/*
-	Author:			HAH! Sun (github.com/omani)
-	Date:			2021-12-12 04:05
-	Title:			NKN-Link
-	Description:	A Point-to-Point (Layer 3) tunnel between NKN Peers.
-					Create a layer 3 tunnel between two NKN peers.
-	Note:			Written down in one go and thus a single file.
-*/
-
 package main
 
 import (
