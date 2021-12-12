@@ -209,7 +209,7 @@ A simple `curl ifconfig.me` on peer B will now output the public IP address of t
 ## Performance
 
 ### Speed comparison
-Scenario: Two peers with a 100Mbps uplink, each. One uses the other's link as a hop. Download a 100MB file.
+Scenario: 2 peers with a 100Mbps uplink, each. One uses the other's link as a hop. Download a 100MB file.
 
 `curl` with regular uplink (internet connection):
 ```
