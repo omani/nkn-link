@@ -9,7 +9,7 @@ A Point-to-Point (Layer 3) tunnel between NKN Peers.
 
 # NKN-Link
 
-[![GoDoc](https://godoc.org/github.com/omani/nkn-link?status.svg)](https://godoc.org/github.com/https://godoc.org/github.com/omani/nkn-link)
+[![GoDoc](https://godoc.org/github.com/omani/nkn-link?status.svg)](https://godoc.org/github.com/omani/nkn-link)
 
 ## Table of Contents
 - [Description](#Description)
