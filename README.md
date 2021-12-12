@@ -53,6 +53,7 @@ Tested only on GNU/Linux. More builds and tests will follow.
 - Do whatever one can do with IP connectivity
 
 ---
+
 ## Install
 ```
 go install github.com/omani/nkn-link
@@ -229,10 +230,12 @@ $ curl --interface nkn-link -o bigfile https://speed.hetzner.de/100MB.bin
 ```
 Average download speed: 615kB/s. 2:46 minutes.
 
-Result: The connection speed when using the tunnel drops by around 15x (equal to a 6Mbps connection).
+#### Result
+The connection speed when using the tunnel drops by around 15x (equal to a 6Mbps connection).
 
 Due to the nature of NKN and how it works, the connection speed will vary.
 
+---
 
 ## Contribution
 * You can fork this, extend it and contribute back.
