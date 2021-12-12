@@ -209,9 +209,8 @@ A simple `curl ifconfig.me` on peer B will now output the public IP address of t
 ## Performance
 
 ### Speed comparison
-Scenario: Two peers with a 100Mbps uplink, each. One uses the other's link as a hop.
+Scenario: Two peers with a 100Mbps uplink, each. One uses the other's link as a hop. Download a 100MB file.
 
-Download a 100MB file:
 `curl` with regular uplink (internet connection):
 ```
 $ curl -o bigfile https://speed.hetzner.de/100MB.bin
@@ -220,18 +219,18 @@ $ curl -o bigfile https://speed.hetzner.de/100MB.bin
 100  100M  100  100M    0     0  9.3M      0  0:00:08  0:00:08 --:--:-- 9.3M
 $ 
 ```
-Average download speed on a 100Mpbs connection: 9.3MB/s. 8 seconds.
+Average download speed: 9.3MB/s. 8 seconds.
 
-`curl` with routing traffic over remote peer:
+`curl` with routing traffic over remote peer using `nkn-link`:
 ```
 $ curl --interface nkn-link -o bigfile https://speed.hetzner.de/100MB.bin
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100  100M  100  100M    0     0   615k      0  0:02:46  0:02:46 --:--:-- 1292k
 ```
-Average download speed through NKN: 615kB/s. 2:46 minutes.
+Average download speed: 615kB/s. 2:46 minutes.
 
-The connection speed when using the tunnel drops by around 15x (equal to a 6Mbps connection).
+Result: The connection speed when using the tunnel drops by around 15x (equal to a 6Mbps connection).
 
 Due to the nature of NKN and how it works, the connection speed will vary.
 
