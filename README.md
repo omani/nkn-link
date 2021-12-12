@@ -65,7 +65,7 @@ This example will:
 ### Initialize configuration
 Initialize a config.yaml by running nkn-link with the `-init` flag.
 ```
-peerA $ sudo nkn-link -init
+peerA $ sudo $GOPATH/bin/nkn-link -init
  _ _  _ __ _ _       _    _       _   
 | \ || / /| \ | ___ | |  <_>._ _ | |__
 |   ||  \ |   ||___|| |_ | || ' || / /
@@ -79,7 +79,7 @@ NKN peer address: nkn-link.ab8d73d580e5fcdfaad25ca442dd33066a22b9a7d28809acc5fb3
 NKN address of remote peer: 
 ```
 ```
-peerB $ sudo nkn-link -init
+peerB $ sudo $GOPATH/bin/nkn-link -init
  _ _  _ __ _ _       _    _       _   
 | \ || / /| \ | ___ | |  <_>._ _ | |__
 |   ||  \ |   ||___|| |_ | || ' || / /
@@ -140,7 +140,7 @@ tun_device_name: nkn-link
 ## Run
 Ready to start `nkn-link` as sudo:
 ```
-sudo nkn-link
+sudo $GOPATH/bin/nkn-link
 ```
 
 Peer A and Peer B should be able to ping each other now:
@@ -176,7 +176,7 @@ default_route_enable: true
 
 Start `nkn-link`:
 ```
-sudo nkn-link
+sudo $GOPATH/bin/nkn-link
 ```
 
 **Note**:
