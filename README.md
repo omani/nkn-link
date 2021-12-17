@@ -271,7 +271,17 @@ Due to the nature of NKN and how it works, the connection speed will vary.
 * You can contribute with pull requests.
 
 ## Donations
-You can make me happy by donating NKN to the following address:
+You can make me happy by donating BTC, XMR or NKN.
+
+BTC:
+```
+bc1qpg5ld425yusw4kk0erumcemf0taa0shulec9au
+```
+XMR:
+```
+89woiq9b5byQ89SsUL4Bd66MNfReBrTwNEDk9GoacgESjfiGnLSZjTD5x7CcUZba4PBbE3gUJRQyLWD4Akz8554DR4Lcyoj
+```
+NKN:
 ```
 NKNVmZQZcDrgdMJKdgRfz2gn5ZdTAyro5uHm
 ```
