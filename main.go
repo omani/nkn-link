@@ -11,19 +11,22 @@ import (
 	"os/signal"
 	"strings"
 
+	"./tun"
+
 	"github.com/davecgh/go-spew/spew"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/lorenzosaino/go-sysctl"
 	"github.com/nknorg/nkn-sdk-go"
 	"github.com/songgao/packets/ethernet"
-	"github.com/songgao/water"
 	"github.com/spf13/viper"
 	"github.com/vishvananda/netlink"
 )
 
 const SEEDRPCSERVERADDR = "http://178.128.136.86:30003"
 const IDENTIFIER = "nkn-link"
+
+const DefaultMTU = 1420
 
 func main() {
 	clientconfig := &nkn.ClientConfig{
@@ -135,22 +138,17 @@ func main() {
 	}
 	defer client.Close()
 
-	// create new TUN device
-	config := water.Config{
-		DeviceType: water.TUN,
-		PlatformSpecificParams: water.PlatformSpecificParams{
-			MultiQueue: true,
-			Name:       viper.GetString("tun_device_name"),
-		},
-	}
-	tun_device, err := water.New(config)
+	tun_device, err := tun.CreateTUN(viper.GetString("tun_device_name"), DefaultMTU)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer tun_device.Close()
 
+	spew.Dump(tun_device.Name())
+	return
+
 	// set IP address of new TUN device
-	tun_link, err := netlink.LinkByName(tun_device.Name())
+	tun_link, err := netlink.LinkByName("hello")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -248,7 +246,7 @@ func main() {
 	go func() {
 		for {
 			tx_frame.Resize(1500)
-			n, err := tun_device.Read([]byte(tx_frame))
+			n, err := tun_device.Read([]byte(tx_frame), len(tx_frame))
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -290,7 +288,7 @@ func main() {
 			fmt.Printf("-----------------------------------------\n\n")
 		}
 
-		_, err := tun_device.Write([]byte(rx_frame))
+		_, err := tun_device.Write([]byte(rx_frame), len(rx_frame))
 		if err != nil {
 			log.Fatal(err)
 		}
