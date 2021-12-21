@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/hex"
 	"fmt"
-	"git/nkn-link/config"
 	"log"
 	"net"
 	"os"
@@ -12,7 +11,7 @@ import (
 
 	"github.com/jessevdk/go-flags"
 	"github.com/lorenzosaino/go-sysctl"
-	"github.com/nknorg/nkn-sdk-go"
+	"github.com/omani/nkn-link/config"
 	"github.com/omani/nkn-link/tun"
 	"github.com/songgao/packets/ethernet"
 	"github.com/vishvananda/netlink"
@@ -59,14 +58,14 @@ func main() {
 	}
 
 	// open NKN account with given seed
-	account, err := nkn.NewAccount(seed)
+	account, err := conf.NewAccount(seed)
 	if err != nil {
 		log.Fatal(err)
 	}
 	conf.Set("nkn_account_seed", hex.EncodeToString(account.Seed()))
 
 	// create new NKN multiclient
-	client, err := nkn.NewMultiClient(account, config.IDENTIFIER, 1, true, conf.NKNClientConfig)
+	client, err := conf.NewMultiClient(account, config.IDENTIFIER, 1, true)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -197,9 +196,9 @@ func main() {
 			}
 
 			_, err = client.Send(
-				nkn.NewStringArrayFromString(conf.NKNRemotePeer),
+				conf.GetNKNRemotePeer(),
 				[]byte(tx_frame),
-				&nkn.MessageConfig{NoReply: false},
+				nil,
 			)
 			if err != nil {
 				log.Fatal(err)

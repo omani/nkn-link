@@ -3,7 +3,6 @@ package config
 import (
 	"bufio"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -13,6 +12,7 @@ import (
 
 	"github.com/nknorg/nkn-sdk-go"
 	"github.com/spf13/viper"
+	"gopkg.in/yaml.v2"
 )
 
 const SEEDRPCSERVERADDR = "http://178.128.136.86:30003"
@@ -20,30 +20,19 @@ const IDENTIFIER = "nkn-link"
 const DefaultMTU = 1420
 
 type Config struct {
-	path            string
-	NKNClientConfig *nkn.ClientConfig
+	path string
 
-	DefaultRouteEnable         bool             `yaml:"default_route_enable"`
-	DefaultRouteGatewayAddress string           `yaml:"default_route_gateway_address"`
-	EnableIPForwarding         bool             `yaml:"enable_ip_forwarding"`
-	NKNAccountSeed             string           `yaml:"nkn_account_seed"`
-	NKNRemotePeer              string           `yaml:"nkn_remote_peer"`
-	NKNSeedRPCServerAddress    *nkn.StringArray `yaml:"nkn_seedrpcserver_address"`
-	TunDeviceIPAddress         string           `yaml:"tun_device_ip_address"`
-	TunDeviceName              string           `yaml:"tun_device_name"`
+	DefaultRouteEnable         bool   `yaml:"default_route_enable"`
+	DefaultRouteGatewayAddress string `yaml:"default_route_gateway_address"`
+	EnableIPForwarding         bool   `yaml:"enable_ip_forwarding"`
+	NKNAccountSeed             string `yaml:"nkn_account_seed"`
+	NKNRemotePeer              string `yaml:"nkn_remote_peer"`
+	NKNSeedRPCServerAddress    string `yaml:"nkn_seedrpcserver_address"`
+	TunDeviceIPAddress         string `yaml:"tun_device_ip_address"`
+	TunDeviceName              string `yaml:"tun_device_name"`
 }
 
 func NewConfig(path string) (*Config, error) {
-	nkn_clientconfig := &nkn.ClientConfig{
-		SeedRPCServerAddr:       nkn.NewStringArray(SEEDRPCSERVERADDR),
-		RPCTimeout:              5000,
-		ConnectRetries:          1,
-		MsgCacheExpiration:      300000,
-		MsgCacheCleanupInterval: 60000,
-		WsHandshakeTimeout:      2500,
-		WsWriteTimeout:          5000,
-	}
-
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		viper.SetConfigName("config")
@@ -62,7 +51,7 @@ func NewConfig(path string) (*Config, error) {
 				log.Fatal(err)
 			}
 
-			client, err := nkn.NewMultiClient(account, IDENTIFIER, 1, true, nkn_clientconfig)
+			client, err := nkn.NewMultiClient(account, IDENTIFIER, 1, true, nil)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -97,14 +86,14 @@ func NewConfig(path string) (*Config, error) {
 			fmt.Println("Successfully written to config.yaml.")
 			fmt.Println("All set. Run `sudo ./nkn-link` to start.")
 			client.Close()
+			os.Exit(0)
 		}
 
 		c := &Config{
-			path:            path,
-			NKNClientConfig: nkn_clientconfig,
+			path: path,
 		}
 
-		err = json.Unmarshal(b, c)
+		err = yaml.Unmarshal(b, c)
 		if err != nil {
 			return nil, err
 		}
@@ -116,18 +105,18 @@ func NewConfig(path string) (*Config, error) {
 		path: path,
 	}
 
-	err = json.Unmarshal(b, c)
+	err = yaml.Unmarshal(b, c)
 	if err != nil {
 		return nil, err
 	}
 
 	// user preferred seed rpc server address
 	if len(viper.GetString("nkn_seedrpcserver_address")) > 0 {
-		c.NKNSeedRPCServerAddress = nkn.NewStringArray(viper.GetString("nkn_seedrpcserver_address"))
+		c.NKNSeedRPCServerAddress = viper.GetString("nkn_seedrpcserver_address")
 	}
 
 	// if `nkn_remote_peer` is missing in config file.
-	if len(viper.GetString("nkn_remote_peer")) == 0 {
+	if len(c.NKNRemotePeer) == 0 {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("NKN address of remote peer: ")
 		remote_peer_addr, _ := reader.ReadString('\n')
@@ -143,8 +132,25 @@ func NewConfig(path string) (*Config, error) {
 
 func (c *Config) Set(key string, value interface{}) {
 	viper.Set(key, value)
+	write()
 }
 
-func (c *Config) write() error {
+func write() error {
 	return viper.WriteConfig()
+}
+
+func (c *Config) NewAccount(seed []byte) (*nkn.Account, error) {
+	return nkn.NewAccount(seed)
+}
+
+func (c *Config) NewMultiClient(acc *nkn.Account, id string, n int, orig bool) (*nkn.MultiClient, error) {
+	return nkn.NewMultiClient(acc, id, n, orig, nil)
+}
+
+func (c *Config) GetNKNRemotePeer() *nkn.StringArray {
+	return nkn.NewStringArray(c.NKNRemotePeer)
+}
+
+func (c *Config) GetNKNSeedRPCServerAddress() *nkn.StringArray {
+	return nkn.NewStringArray(c.NKNSeedRPCServerAddress)
 }
