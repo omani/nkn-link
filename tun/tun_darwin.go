@@ -15,7 +15,6 @@ import (
 	"time"
 	"unsafe"
 
-	"golang.org/x/net/ipv6"
 	"golang.org/x/sys/unix"
 )
 
@@ -217,39 +216,17 @@ func (tun *NativeTun) Events() chan Event {
 	return tun.events
 }
 
-func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {
+func (tun *NativeTun) Read(buff []byte, offset int) (n int, err error) {
 	select {
 	case err := <-tun.errors:
 		return 0, err
 	default:
-		buff := buff[offset-4:]
-		n, err := tun.tunFile.Read(buff[:])
-		if n < 4 {
-			return 0, err
-		}
-		return n - 4, err
+		n, err = tun.tunFile.Read(buff)
 	}
+	return
 }
 
 func (tun *NativeTun) Write(buff []byte, offset int) (int, error) {
-	// reserve space for header
-
-	buff = buff[offset-4:]
-
-	// add packet information header
-
-	buff[0] = 0x00
-	buff[1] = 0x00
-	buff[2] = 0x00
-
-	if buff[4]>>4 == ipv6.Version {
-		buff[3] = unix.AF_INET6
-	} else {
-		buff[3] = unix.AF_INET
-	}
-
-	// write
-
 	return tun.tunFile.Write(buff)
 }
 

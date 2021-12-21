@@ -157,7 +157,6 @@ retry:
 		switch err {
 		case nil:
 			packetSize := len(packet)
-			copy(buff[offset:], packet)
 			tun.session.ReleaseReceivePacket(packet)
 			tun.rate.update(uint64(packetSize))
 			return packetSize, nil
@@ -188,12 +187,12 @@ func (tun *NativeTun) Write(buff []byte, offset int) (int, error) {
 		return 0, os.ErrClosed
 	}
 
-	packetSize := len(buff) - offset
+	packetSize := len(buff)
 	tun.rate.update(uint64(packetSize))
 
 	packet, err := tun.session.AllocateSendPacket(packetSize)
 	if err == nil {
-		copy(packet, buff[offset:])
+		copy(packet, buff)
 		tun.session.SendPacket(packet)
 		return packetSize, nil
 	}

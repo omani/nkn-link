@@ -8,7 +8,6 @@ package tun
 import (
 	"errors"
 	"fmt"
-	"io"
 	"net"
 	"os"
 	"sync"
@@ -333,39 +332,18 @@ func (tun *NativeTun) Events() chan Event {
 	return tun.events
 }
 
-func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {
+func (tun *NativeTun) Read(buff []byte, offset int) (n int, err error) {
 	select {
 	case err := <-tun.errors:
 		return 0, err
 	default:
-		buff := buff[offset-4:]
-		n, err := tun.tunFile.Read(buff[:])
-		if n < 4 {
-			return 0, err
-		}
-		return n - 4, err
+		n, err = tun.tunFile.Read(buff)
 	}
+
+	return
 }
 
 func (tun *NativeTun) Write(buf []byte, offset int) (int, error) {
-	if offset < 4 {
-		return 0, io.ErrShortBuffer
-	}
-	buf = buf[offset-4:]
-	if len(buf) < 5 {
-		return 0, io.ErrShortBuffer
-	}
-	buf[0] = 0x00
-	buf[1] = 0x00
-	buf[2] = 0x00
-	switch buf[4] >> 4 {
-	case 4:
-		buf[3] = unix.AF_INET
-	case 6:
-		buf[3] = unix.AF_INET6
-	default:
-		return 0, unix.EAFNOSUPPORT
-	}
 	return tun.tunFile.Write(buf)
 }
 
