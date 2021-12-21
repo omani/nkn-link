@@ -18,9 +18,7 @@ import (
 	"time"
 	"unsafe"
 
-	"golang.org/x/net/ipv6"
 	"golang.org/x/sys/unix"
-
 	"golang.zx2c4.com/wireguard/rwcancel"
 )
 
@@ -328,25 +326,7 @@ func (tun *NativeTun) nameSlow() (string, error) {
 	return string(name), nil
 }
 
-func (tun *NativeTun) Write(buf []byte, offset int) (int, error) {
-	if tun.nopi {
-		buf = buf[offset:]
-	} else {
-		// reserve space for header
-		buf = buf[offset-4:]
-
-		// add packet information header
-		buf[0] = 0x00
-		buf[1] = 0x00
-		if buf[4]>>4 == ipv6.Version {
-			buf[2] = 0x86
-			buf[3] = 0xdd
-		} else {
-			buf[2] = 0x08
-			buf[3] = 0x00
-		}
-	}
-
+func (tun *NativeTun) Write(buf []byte) (int, error) {
 	n, err := tun.tunFile.Write(buf)
 	if errors.Is(err, syscall.EBADFD) {
 		err = os.ErrClosed
@@ -359,22 +339,16 @@ func (tun *NativeTun) Flush() error {
 	return nil
 }
 
-func (tun *NativeTun) Read(buf []byte, offset int) (n int, err error) {
+func (tun *NativeTun) Read(buf []byte) (n int, err error) {
 	select {
 	case err = <-tun.errors:
 	default:
 		if tun.nopi {
-			n, err = tun.tunFile.Read(buf[offset:])
+			n, err = tun.tunFile.Read(buf)
 		} else {
-			buff := buf[offset-4:]
-			n, err = tun.tunFile.Read(buff[:])
+			n, err = tun.tunFile.Read(buf)
 			if errors.Is(err, syscall.EBADFD) {
 				err = os.ErrClosed
-			}
-			if n < 4 {
-				n = 0
-			} else {
-				n -= 4
 			}
 		}
 	}

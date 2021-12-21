@@ -27,6 +27,7 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/imdario/mergo v0.3.9 // indirect
 	github.com/itchyny/base58-go v0.0.5 // indirect
+	github.com/jessevdk/go-flags v1.5.0
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/nknorg/ncp-go v1.0.3 // indirect
