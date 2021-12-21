@@ -3,8 +3,6 @@ module github.com/omani/nkn-link
 go 1.17
 
 require (
-	github.com/davecgh/go-spew v1.1.1
-	github.com/google/gopacket v1.1.19
 	github.com/lorenzosaino/go-sysctl v0.2.0
 	github.com/nknorg/nkn-sdk-go v1.3.7
 	github.com/songgao/packets v0.0.0-20160404182456-549a10cd4091
@@ -12,7 +10,6 @@ require (
 	github.com/vishvananda/netlink v1.1.0
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e
-	golang.zx2c4.com/go118/netip v0.0.0-20211111135330-a4a02eeacf9d
 	golang.zx2c4.com/wintun v0.0.0-20211104114900-415007cec224
 	golang.zx2c4.com/wireguard v0.0.0-20211209221555-9c9e7e272434
 )
@@ -30,7 +27,6 @@ require (
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
-	github.com/moriyoshi/routewrapper v0.0.0-20180228100351-e52d8d14cf39
 	github.com/nknorg/ncp-go v1.0.3 // indirect
 	github.com/nknorg/nkn/v2 v2.0.6 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
@@ -50,6 +46,6 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0
 	honnef.co/go/tools v0.2.1 // indirect
 )
