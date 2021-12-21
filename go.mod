@@ -30,6 +30,7 @@ require (
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
+	github.com/moriyoshi/routewrapper v0.0.0-20180228100351-e52d8d14cf39
 	github.com/nknorg/ncp-go v1.0.3 // indirect
 	github.com/nknorg/nkn/v2 v2.0.6 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect

@@ -326,7 +326,7 @@ func (tun *NativeTun) nameSlow() (string, error) {
 	return string(name), nil
 }
 
-func (tun *NativeTun) Write(buf []byte) (int, error) {
+func (tun *NativeTun) Write(buf []byte, offset int) (int, error) {
 	n, err := tun.tunFile.Write(buf)
 	if errors.Is(err, syscall.EBADFD) {
 		err = os.ErrClosed
@@ -339,7 +339,7 @@ func (tun *NativeTun) Flush() error {
 	return nil
 }
 
-func (tun *NativeTun) Read(buf []byte) (n int, err error) {
+func (tun *NativeTun) Read(buf []byte, offset int) (n int, err error) {
 	select {
 	case err = <-tun.errors:
 	default:

@@ -1,3 +1,5 @@
+//go:build !windows
+
 package main
 
 import (
@@ -82,11 +84,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// set IP address of new TUN device
 	tun_link, err := netlink.LinkByName(tun_device_name)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// set IP address of new TUN device
 	addr, _ := netlink.ParseAddr(conf.TunDeviceIPAddress)
 	netlink.AddrAdd(tun_link, addr)
 	netlink.LinkSetUp(tun_link)
@@ -111,7 +114,7 @@ func main() {
 			netlink.RouteDel(&routelist[0])
 			// lower its metric so our new default route is higher
 			routelist[0].Priority = 100
-			netlink.RouteReplace(&routelist[0])
+			netlink.RouteAdd(&routelist[0])
 
 			// now add a new default route with our remote peer as the gateway
 			routes = append(routes, netlink.Route{
@@ -181,7 +184,7 @@ func main() {
 	go func() {
 		for {
 			tx_frame.Resize(1500)
-			n, err := tun_device.Read([]byte(tx_frame))
+			n, err := tun_device.Read([]byte(tx_frame), 0)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -219,7 +222,7 @@ func main() {
 			fmt.Printf("-----------------------------------------\n\n")
 		}
 
-		_, err := tun_device.Write([]byte(rx_frame))
+		_, err := tun_device.Write([]byte(rx_frame), 0)
 		if err != nil {
 			log.Fatal(err)
 		}
